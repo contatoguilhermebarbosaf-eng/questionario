@@ -1,73 +1,212 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<title>Questionário Online</title>
-<link href="https://unpkg.com/survey-core/defaultV2.min.css" rel="stylesheet"/>
-<script src="https://unpkg.com/survey-core/survey.core.min.js"></script>
-<script src="https://unpkg.com/survey-knockout/survey.ko.min.js"></script>
-<style>
-  body { font-family: Arial, sans-serif; margin: 20px; }
-  textarea { width: 100%; height: 180px; font-family: monospace; }
-  input { width: 60%; padding: 6px; }
-  button { margin: 6px; padding: 8px 14px; cursor: pointer; }
-  #surveyContainer { margin-top: 24px; }
-</style>
-</head>
-<body>
-
-<h2>Questionário via SurveyJS</h2>
-<p>Cole o JSON do questionário abaixo e teste:</p>
-
-<textarea id="jsonIn" placeholder='{"title":"Meu questionário","elements":[ ... ]}'></textarea><br/>
-URL do Google Script: <input id="webhook" placeholder="Cole aqui a URL do Apps Script">
-<button id="loadBtn">Carregar</button>
-<button id="sample">Exemplo JSON</button>
-<p id="msg" style="color:red"></p>
-
-<div id="surveyContainer"></div>
-
-<script>
-const exemplo = {
-  "title": "Pesquisa de Satisfação",
-  "elements": [
-    {"type":"text","name":"nome","title":"Seu nome","isRequired":true},
-    {"type":"radiogroup","name":"avaliacao","title":"Como você avalia nosso serviço?","choices":["Ótimo","Bom","Regular","Ruim"]},
-    {"type":"comment","name":"observacao","title":"Comentários adicionais"}
+{
+  "title": "Trabalhos/Pessoas Ocupadas",
+  "pages": [
+    {
+      "name": "pagina1",
+      "elements": [
+        {
+          "type": "boolean",
+          "name": "trabalho_remunerado_dinheiro",
+          "title": "Entre [A] e [B] (período de referência de 12 meses), trabalhou ou estagiou em alguma atividade remunerada em dinheiro?",
+          "isRequired": true
+        },
+        {
+          "type": "boolean",
+          "name": "trabalho_remunerado_produtos",
+          "title": "Entre [A] e [B] (período de referência de 12 meses), trabalhou ou estagiou em alguma atividade remunerada em produtos, mercadorias, moradia, alimentação, treinamento ou aprendizado, etc.?",
+          "isRequired": true
+        },
+        {
+          "type": "boolean",
+          "name": "bico_atividade_ocasional",
+          "title": "Entre [A] e [B] (período de referência de 12 meses), fez algum bico ou trabalhou em alguma atividade ocasional remunerada?",
+          "isRequired": true
+        },
+        {
+          "type": "boolean",
+          "name": "ajuda_sem_pagamento",
+          "title": "Entre [A] e [B] (período de referência de 12 meses), ajudou, sem receber pagamento, no trabalho remunerado de algum morador do domicílio ou de parente?",
+          "isRequired": true
+        },
+        {
+          "type": "boolean",
+          "name": "afastado_trabalho",
+          "title": "Entre [A] e [B] (período de referência de 12 meses), teve algum trabalho remunerado do qual estava temporariamente afastado?",
+          "isRequired": true
+        },
+        {
+          "type": "text",
+          "name": "quantos_trabalhos",
+          "title": "Entre [A] e [B] (período de referência de 12 meses), quantos trabalhos teve?",
+          "isRequired": false
+        },
+        {
+          "type": "text",
+          "name": "ocupacao",
+          "title": "Qual era a ocupação (cargo ou função) que tinha nesse trabalho?",
+          "isRequired": true
+        },
+        {
+          "type": "comment",
+          "name": "tarefas",
+          "title": "Entre [A] e [B] (período de referência de 12 meses), quais eram as principais tarefas ou atribuições que tinha nesse trabalho?",
+          "isRequired": true
+        },
+        {
+          "type": "radiogroup",
+          "name": "tipo_trabalho",
+          "title": "Nesse trabalho era:",
+          "isRequired": true,
+          "choices": [
+            "Trabalhador doméstico",
+            "Militar (exército, marinha, aeronáutica, polícia militar ou bombeiro)",
+            "Empregado do setor privado",
+            "Empregado do setor público",
+            "Empregador",
+            "Conta própria",
+            "Trabalhador não remunerado em ajuda a membro do domicílio ou parente"
+          ]
+        },
+        {
+          "type": "boolean",
+          "name": "servidor_publico_estatutario",
+          "title": "Nesse trabalho, era servidor público estatutário (federal, estadual, municipal)?",
+          "isRequired": false
+        },
+        {
+          "type": "boolean",
+          "name": "carteira_assinada",
+          "title": "Nesse trabalho, tinha carteira de trabalho assinada?",
+          "isRequired": true
+        },
+        {
+          "type": "boolean",
+          "name": "contribuinte_previdencia",
+          "title": "Nesse trabalho, era contribuinte de instituto de previdência?",
+          "isRequired": true
+        },
+        {
+          "type": "text",
+          "name": "atividade_negocio",
+          "title": "Qual era a principal atividade desse negócio/empresa?",
+          "isRequired": true
+        },
+        {
+          "type": "radiogroup",
+          "name": "forma_pagamento",
+          "title": "Qual foi a forma de pagamento do último rendimento bruto mensal recebido nesse trabalho?",
+          "isRequired": true,
+          "choices": [
+            "Em dinheiro",
+            "Em dinheiro e benefícios",
+            "Somente em benefícios",
+            "Não teve rendimento"
+          ]
+        },
+        {
+          "type": "text",
+          "name": "valor_rendimento",
+          "title": "Qual o valor do último rendimento bruto mensal recebido nesse trabalho? (em R$)",
+          "isRequired": false
+        },
+        {
+          "type": "boolean",
+          "name": "valor_sem_deducao",
+          "title": "O valor informado é sem qualquer dedução (Previdência Pública, Imposto de Renda, ISS e outros)?",
+          "isRequired": false
+        },
+        {
+          "type": "text",
+          "name": "valor_antes_deducao",
+          "title": "Qual o valor antes de qualquer dedução? (em R$)",
+          "isRequired": false
+        },
+        {
+          "type": "text",
+          "name": "deducao_previdencia",
+          "title": "Qual o valor da dedução de Previdência Pública? (em R$)",
+          "isRequired": false
+        },
+        {
+          "type": "text",
+          "name": "deducao_ir",
+          "title": "Qual o valor da dedução de Imposto de Renda? (em R$)",
+          "isRequired": false
+        },
+        {
+          "type": "text",
+          "name": "deducao_iss",
+          "title": "Qual o valor da dedução de ISS e outros impostos? (em R$)",
+          "isRequired": false
+        },
+        {
+          "type": "text",
+          "name": "mes_ultimo_rendimento",
+          "title": "Qual foi o mês do último rendimento bruto mensal recebido nesse trabalho?",
+          "isRequired": false
+        },
+        {
+          "type": "text",
+          "name": "meses_recebidos",
+          "title": "Por quantos meses recebeu por esse trabalho durante o período de [A] a [B]?",
+          "isRequired": false
+        },
+        {
+          "type": "text",
+          "name": "horas_semanais",
+          "title": "Quantas horas trabalhava normalmente, por semana, nesse trabalho?",
+          "isRequired": true
+        },
+        {
+          "type": "radiogroup",
+          "name": "duracao_deslocamento",
+          "title": "Qual a duração habitual do deslocamento para esse trabalho?",
+          "isRequired": false,
+          "choices": [
+            "Até 5 minutos",
+            "De 6 a 30 minutos",
+            "Mais de 30 minutos até 1 hora",
+            "Mais de 1 hora até 2 horas",
+            "Mais de 2 horas"
+          ]
+        },
+        {
+          "type": "boolean",
+          "name": "recebeu_13",
+          "title": "Entre [A] e [B], recebeu por esse trabalho rendimento de 13°, 14° salário, etc.?",
+          "isRequired": false
+        },
+        {
+          "type": "boolean",
+          "name": "recebeu_ferias",
+          "title": "Entre [A] e [B], recebeu por esse trabalho rendimento de férias?",
+          "isRequired": false
+        },
+        {
+          "type": "boolean",
+          "name": "recebeu_comissoes",
+          "title": "Entre [A] e [B], recebeu por esse trabalho rendimento de comissões?",
+          "isRequired": false
+        },
+        {
+          "type": "boolean",
+          "name": "recebeu_horas_extras",
+          "title": "Entre [A] e [B], recebeu por esse trabalho rendimento de horas extras?",
+          "isRequired": false
+        },
+        {
+          "type": "boolean",
+          "name": "recebeu_bonificacoes",
+          "title": "Entre [A] e [B], recebeu por esse trabalho bonificações e/ou participação nos lucros?",
+          "isRequired": false
+        },
+        {
+          "type": "boolean",
+          "name": "recebeu_salario_familia",
+          "title": "Entre [A] e [B], recebeu por esse trabalho rendimento de salário família?",
+          "isRequired": false
+        }
+      ]
+    }
   ]
-};
-
-document.getElementById('sample').onclick = () => {
-  document.getElementById('jsonIn').value = JSON.stringify(exemplo, null, 2);
-};
-
-document.getElementById('loadBtn').onclick = () => {
-  const texto = document.getElementById('jsonIn').value.trim();
-  const webhook = document.getElementById('webhook').value.trim();
-  if (!texto) { document.getElementById('msg').innerText = 'Cole o JSON primeiro.'; return; }
-
-  let json;
-  try { json = JSON.parse(texto); } 
-  catch(e) { document.getElementById('msg').innerText = 'Erro no JSON: ' + e.message; return; }
-
-  const survey = new Survey.Model(json);
-  survey.onComplete.add((s) => {
-    const dados = s.data;
-    if (!webhook) { alert('Faltou a URL do Apps Script!'); return; }
-    fetch(webhook, {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({questionario: json.title || 'sem_titulo', respostas: dados})
-    })
-    .then(r => r.json())
-    .then(() => alert('Enviado com sucesso!'))
-    .catch(err => alert('Erro ao enviar: ' + err));
-  });
-
-  document.getElementById('surveyContainer').innerHTML = '';
-  Survey.SurveyNG.render('surveyContainer', {model: survey});
-};
-</script>
-
-</body>
-</html>
+}

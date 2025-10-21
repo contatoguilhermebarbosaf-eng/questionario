@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Questionário de Teste</title>
-<link href="https://unpkg.com/survey-core/defaultV2.min.css" rel="stylesheet"/>
-<script src="https://unpkg.com/survey-knockout/survey.ko.min.js"></script>
+<link href="https://unpkg.com/survey-knockout/survey.min.css" rel="stylesheet"/>
+<script src="https://unpkg.com/survey-knockout/survey.min.js"></script>
 <style>
   body { font-family: Arial, sans-serif; margin: 20px; }
   #surveyContainer { margin-top: 24px; }
@@ -13,12 +13,12 @@
 <body>
 
 <h2>Questionário de Teste</h2>
-<p>Este questionário já está carregado automaticamente para testes.</p>
+<p>O formulário deve aparecer imediatamente abaixo.</p>
 
 <div id="surveyContainer"></div>
 
 <script>
-// Questionário de teste
+// Questionário padrão
 const questionarioTeste = {
   "title": "Pesquisa de Satisfação - Teste",
   "elements": [
@@ -32,23 +32,20 @@ const questionarioTeste = {
 // URL do Apps Script
 const webhook = "https://script.google.com/macros/s/AKfycbz6WlSBoH5kUHwrDx282708s-j4BZIEIs7lA4wWVxFY2QZXNP1T5ZGF2AOrfgZ2To88BA/exec";
 
-// Cria o SurveyJS model
+// Cria o survey e renderiza automaticamente
 const survey = new Survey.Model(questionarioTeste);
 
-// Envio das respostas
-survey.onComplete.add((s) => {
-  const dados = s.data;
+survey.onComplete.add(function(result) {
   fetch(webhook, {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({questionario: questionarioTeste.title, respostas: dados})
+    body: JSON.stringify({questionario: questionarioTeste.title, respostas: result.data})
   })
   .then(r => r.json())
   .then(() => alert('Enviado com sucesso!'))
   .catch(err => alert('Erro ao enviar: ' + err));
 });
 
-// Renderiza o questionário
 survey.render("surveyContainer");
 </script>
 
